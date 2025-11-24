@@ -17,7 +17,12 @@ async function PostList() {
 
   return (
     <div className={styles.postList}>
-      <h2>게시판 목록</h2>
+      <div className={styles.listHeader}>
+        <h2>게시판 목록</h2>
+        <Link href="/posts/create" className={styles.createButton}>
+          + 새 게시글 작성
+        </Link>
+      </div>
       <ul className={styles.posts}>
         {data.posts.map((post) => (
           <li key={post.id} className={styles.postItem}>

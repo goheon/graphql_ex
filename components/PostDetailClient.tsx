@@ -1,15 +1,18 @@
 "use client";
 
-import { GET_POST } from "@/graphql/queries";
-import { GetPostData, GetPostVars } from "@/types/post";
-import { useQuery } from "@apollo/client/react";
+import { GET_POST, DELETE_POST, GET_POSTS } from "@/graphql/queries";
+import { GetPostData, GetPostVars, DeletePostData, DeletePostVars } from "@/types/post";
+import { useQuery, useMutation } from "@apollo/client/react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import styles from "./PostDetail.module.scss";
 
 export default function PostDetailClient() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { loading, error, data } = useQuery<GetPostData, GetPostVars>(
     GET_POST,
@@ -17,6 +20,31 @@ export default function PostDetailClient() {
       variables: { id },
     }
   );
+
+  const [deletePost] = useMutation<DeletePostData, DeletePostVars>(
+    DELETE_POST,
+    {
+      refetchQueries: [{ query: GET_POSTS }],
+      onCompleted: () => {
+        router.push('/');
+      },
+    }
+  );
+
+  const handleDelete = async () => {
+    if (!confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await deletePost({ variables: { id } });
+    } catch (err) {
+      console.error('Error deleting post:', err);
+      alert('게시글 삭제에 실패했습니다.');
+      setIsDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -84,6 +112,18 @@ export default function PostDetailClient() {
         </div>
 
         <footer className={styles.footer}>
+          <div className={styles.actions}>
+            <Link href={`/posts/${id}/edit`} className={styles.editButton}>
+              수정
+            </Link>
+            <button
+              onClick={handleDelete}
+              className={styles.deleteButton}
+              disabled={isDeleting}
+            >
+              {isDeleting ? '삭제 중...' : '삭제'}
+            </button>
+          </div>
           <Link href="/" className={styles.backButton}>
             ← 목록으로 돌아가기
           </Link>

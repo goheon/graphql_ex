@@ -25,3 +25,31 @@ export interface GetPostData {
 export interface GetPostVars {
   id: string;
 }
+
+export interface CreatePostVars {
+  title: string;
+  content: string;
+  author: string;
+}
+
+export interface CreatePostData {
+  createPost: Post;
+}
+
+export interface UpdatePostVars {
+  id: string;
+  title?: string;
+  content?: string;
+}
+
+export interface UpdatePostData {
+  updatePost: Post;
+}
+
+export interface DeletePostVars {
+  id: string;
+}
+
+export interface DeletePostData {
+  deletePost: boolean;
+}
