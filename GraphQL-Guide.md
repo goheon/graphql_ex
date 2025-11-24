@@ -1,6 +1,7 @@
 # GraphQL 학습 가이드
 
 ## 목차
+
 1. [GraphQL 소개](#graphql-소개)
 2. [GraphQL vs REST API](#graphql-vs-rest-api)
 3. [핵심 개념](#핵심-개념)
@@ -16,6 +17,7 @@
 GraphQL은 Facebook에서 개발한 **API를 위한 쿼리 언어**이자 **런타임**입니다. 클라이언트가 필요한 데이터의 구조를 정의하면, 서버는 정확히 그 구조에 맞춰 데이터를 반환합니다.
 
 ### 주요 특징
+
 - **선언적 데이터 페칭**: 클라이언트가 필요한 데이터만 요청
 - **단일 엔드포인트**: 하나의 엔드포인트로 모든 데이터 요청 처리
 - **강력한 타입 시스템**: 스키마를 통한 명확한 API 계약
@@ -25,25 +27,27 @@ GraphQL은 Facebook에서 개발한 **API를 위한 쿼리 언어**이자 **런�
 
 ## GraphQL vs REST API
 
-| 특성 | GraphQL | REST API |
-|------|---------|----------|
-| 엔드포인트 | 단일 엔드포인트 (`/graphql`) | 다중 엔드포인트 (`/users`, `/posts`) |
-| 데이터 페칭 | 필요한 데이터만 요청 | 고정된 데이터 구조 반환 |
-| Over-fetching | ❌ 없음 | ✅ 발생 가능 |
-| Under-fetching | ❌ 없음 | ✅ 발생 가능 (여러 요청 필요) |
-| 버전 관리 | 불필요 (스키마 진화) | 필요 (v1, v2) |
-| 타입 시스템 | 강력한 타입 시스템 | 약한 타입 시스템 |
+| 특성           | GraphQL                      | REST API                             |
+| -------------- | ---------------------------- | ------------------------------------ |
+| 엔드포인트     | 단일 엔드포인트 (`/graphql`) | 다중 엔드포인트 (`/users`, `/posts`) |
+| 데이터 페칭    | 필요한 데이터만 요청         | 고정된 데이터 구조 반환              |
+| Over-fetching  | ❌ 없음                      | ✅ 발생 가능                         |
+| Under-fetching | ❌ 없음                      | ✅ 발생 가능 (여러 요청 필요)        |
+| 버전 관리      | 불필요 (스키마 진화)         | 필요 (v1, v2)                        |
+| 타입 시스템    | 강력한 타입 시스템           | 약한 타입 시스템                     |
 
 ### Over-fetching과 Under-fetching
 
 **Over-fetching**: 필요 이상의 데이터를 받는 현상
+
 ```javascript
 // REST: 사용자 이름만 필요해도 모든 정보를 받음
-GET /users/1
+GET / users / 1;
 // Response: { id, name, email, age, address, phone, ... }
 ```
 
 **Under-fetching**: 필요한 데이터를 얻기 위해 여러 번 요청해야 하는 현상
+
 ```javascript
 // REST: 사용자와 게시글을 각각 요청
 GET /users/1
@@ -55,6 +59,7 @@ GET /posts?userId=1
 ## 핵심 개념
 
 ### 1. Schema (스키마)
+
 GraphQL API의 청사진. 어떤 데이터를 쿼리할 수 있는지 정의합니다.
 
 ```graphql
@@ -74,6 +79,7 @@ type Post {
 ```
 
 ### 2. Query (쿼리)
+
 데이터를 **읽기** 위한 작업
 
 ```graphql
@@ -89,6 +95,7 @@ query GetUser {
 ```
 
 ### 3. Mutation (뮤테이션)
+
 데이터를 **생성, 수정, 삭제**하기 위한 작업
 
 ```graphql
@@ -102,6 +109,7 @@ mutation CreatePost {
 ```
 
 ### 4. Subscription (구독)
+
 **실시간 데이터**를 받기 위한 작업
 
 ```graphql
@@ -121,6 +129,7 @@ subscription OnPostCreated {
 ## 스키마와 타입
 
 ### 기본 스칼라 타입
+
 - `Int`: 정수
 - `Float`: 부동 소수점
 - `String`: 문자열
@@ -128,6 +137,7 @@ subscription OnPostCreated {
 - `ID`: 고유 식별자
 
 ### 타입 수식어
+
 - `String!`: 필수 (non-nullable)
 - `[String!]`: String 배열 (배열 자체는 null 가능, 요소는 non-null)
 - `[String!]!`: 필수 String 배열 (배열도 요소도 non-null)
@@ -254,6 +264,7 @@ mutation DeleteUser($id: ID!) {
 ## Apollo Client 사용법
 
 ### 설치
+
 ```bash
 npm install @apollo/client graphql
 ```
@@ -262,10 +273,10 @@ npm install @apollo/client graphql
 
 ```typescript
 // lib/apollo-client.ts
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
 const httpLink = new HttpLink({
-  uri: 'https://api.example.com/graphql',
+  uri: "https://api.example.com/graphql",
 });
 
 const client = new ApolloClient({
@@ -280,10 +291,10 @@ export default client;
 
 ```typescript
 // app/layout.tsx
-'use client';
+"use client";
 
-import { ApolloProvider } from '@apollo/client';
-import client from '@/lib/apollo-client';
+import { ApolloProvider } from "@apollo/client";
+import client from "@/lib/apollo-client";
 
 export default function RootLayout({
   children,
@@ -293,9 +304,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <ApolloProvider client={client}>
-          {children}
-        </ApolloProvider>
+        <ApolloProvider client={client}>{children}</ApolloProvider>
       </body>
     </html>
   );
@@ -305,9 +314,9 @@ export default function RootLayout({
 ### useQuery 사용
 
 ```typescript
-'use client';
+"use client";
 
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql } from "@apollo/client";
 
 const GET_USERS = gql`
   query GetUsers {
@@ -340,10 +349,10 @@ export default function UserList() {
 ### useMutation 사용
 
 ```typescript
-'use client';
+"use client";
 
-import { useMutation, gql } from '@apollo/client';
-import { useState } from 'react';
+import { useMutation, gql } from "@apollo/client";
+import { useState } from "react";
 
 const CREATE_USER = gql`
   mutation CreateUser($input: CreateUserInput!) {
@@ -356,8 +365,8 @@ const CREATE_USER = gql`
 `;
 
 export default function CreateUserForm() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -365,13 +374,13 @@ export default function CreateUserForm() {
     try {
       await createUser({
         variables: {
-          input: { name, email }
-        }
+          input: { name, email },
+        },
       });
-      setName('');
-      setEmail('');
+      setName("");
+      setEmail("");
     } catch (err) {
-      console.error('Error creating user:', err);
+      console.error("Error creating user:", err);
     }
   };
 
@@ -390,7 +399,7 @@ export default function CreateUserForm() {
         placeholder="Email"
       />
       <button type="submit" disabled={loading}>
-        {loading ? 'Creating...' : 'Create User'}
+        {loading ? "Creating..." : "Create User"}
       </button>
       {error && <p>Error: {error.message}</p>}
       {data && <p>User created: {data.createUser.name}</p>}
@@ -415,13 +424,13 @@ const [createUser] = useMutation(CREATE_USER, {
                 name
                 email
               }
-            `
+            `,
           });
           return [...existingUsers, newUserRef];
-        }
-      }
+        },
+      },
     });
-  }
+  },
 });
 ```
 
@@ -432,12 +441,13 @@ const [createUser] = useMutation(CREATE_USER, {
 ### 1. 공개 GraphQL API로 실습하기
 
 #### SpaceX API
+
 ```typescript
 // lib/apollo-client.ts
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: 'https://spacex-production.up.railway.app/',
+  uri: "https://spacex-production.up.railway.app/",
   cache: new InMemoryCache(),
 });
 
@@ -465,9 +475,10 @@ const GET_LAUNCHES = gql`
 ```
 
 #### GitHub GraphQL API
+
 ```typescript
 const client = new ApolloClient({
-  uri: 'https://api.github.com/graphql',
+  uri: "https://api.github.com/graphql",
   headers: {
     authorization: `Bearer YOUR_GITHUB_TOKEN`,
   },
@@ -495,9 +506,9 @@ const GET_USER = gql`
 
 ```typescript
 // pages/api/graphql.ts (Next.js API Route)
-import { ApolloServer } from '@apollo/server';
-import { startServerAndCreateNextHandler } from '@as-integrations/next';
-import { gql } from 'graphql-tag';
+import { ApolloServer } from "@apollo/server";
+import { startServerAndCreateNextHandler } from "@as-integrations/next";
+import { gql } from "graphql-tag";
 
 const typeDefs = gql`
   type User {
@@ -517,15 +528,15 @@ const typeDefs = gql`
 `;
 
 const users = [
-  { id: '1', name: 'Alice', email: 'alice@example.com' },
-  { id: '2', name: 'Bob', email: 'bob@example.com' },
+  { id: "1", name: "Alice", email: "alice@example.com" },
+  { id: "2", name: "Bob", email: "bob@example.com" },
 ];
 
 const resolvers = {
   Query: {
     users: () => users,
-    user: (_: any, { id }: { id: string }) => 
-      users.find(user => user.id === id),
+    user: (_: any, { id }: { id: string }) =>
+      users.find((user) => user.id === id),
   },
   Mutation: {
     createUser: (_: any, { name, email }: { name: string; email: string }) => {
