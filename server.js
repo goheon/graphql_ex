@@ -60,14 +60,67 @@ const typeDefs = gql`
   }
 `;
 
-// Resolvers
+// 디버그 미들웨어 - 간결한 로깅
+const debugMiddleware = {
+  async requestDidStart(requestContext) {
+    const operation = requestContext.request.operationName || "Anonymous";
+    const timestamp = new Date().toLocaleTimeString("ko-KR");
+    const { request } = requestContext;
+
+    // HTTP 헤더에서 요청 출처 확인
+    const headers = request.http?.headers;
+    const userAgent = headers?.get("user-agent") || "";
+    const referer = headers?.get("referer") || "";
+
+    // Next.js 서버 컴포넌트 요청 감지
+    const isServerComponent =
+      userAgent.includes("undici") ||
+      userAgent.includes("node-fetch") ||
+      !userAgent.includes("Mozilla");
+
+    const source = isServerComponent ? "🖥️  [Server Component]" : "🌐 [Client]";
+
+    console.log(`\n${"━".repeat(50)}`);
+    console.log(`[${timestamp}] ${source} ${operation}`);
+    if (referer) {
+      console.log(`   From: ${referer}`);
+    }
+
+    return {
+      async willSendResponse({ response }) {
+        if (response.errors) {
+          console.log(
+            "❌ Errors:",
+            response.errors.map((e) => e.message).join(", ")
+          );
+        } else {
+          console.log("✅ Success");
+        }
+        console.log("━".repeat(50));
+      },
+    };
+  },
+};
+
+// Resolvers with logging
 const resolvers = {
   Query: {
-    posts: () => posts,
-    post: (_, { id }) => posts.find((post) => post.id === id),
+    posts: () => {
+      console.log("📥 Query.posts");
+      console.log(`   → ${posts.length} posts`);
+      return posts;
+    },
+    post: (_, { id }) => {
+      console.log(`📥 Query.post(id: ${id})`);
+      const result = posts.find((post) => post.id === id);
+      console.log(`   → ${result ? `"${result.title}"` : "Not found"}`);
+      return result;
+    },
   },
   Mutation: {
     createPost: (_, { title, content, author }) => {
+      console.log(`✏️  Mutation.createPost`);
+      console.log(`   → "${title}" by ${author}`);
       const newPost = {
         id: String(posts.length + 1),
         title,
@@ -76,23 +129,34 @@ const resolvers = {
         createdAt: new Date().toISOString(),
       };
       posts.push(newPost);
+      console.log(`   → Created #${newPost.id} (Total: ${posts.length})`);
       return newPost;
     },
     updatePost: (_, { id, title, content }) => {
+      console.log(`🔄 Mutation.updatePost(id: ${id})`);
       const post = posts.find((p) => p.id === id);
-      if (!post) return null;
+      if (!post) {
+        console.log("   → Not found ❌");
+        return null;
+      }
 
       if (title) post.title = title;
       if (content) post.content = content;
       post.updatedAt = new Date().toISOString();
-
+      console.log(`   → Updated "${post.title}"`);
       return post;
     },
     deletePost: (_, { id }) => {
+      console.log(`🗑️  Mutation.deletePost(id: ${id})`);
       const index = posts.findIndex((p) => p.id === id);
-      if (index === -1) return false;
+      if (index === -1) {
+        console.log("   → Not found ❌");
+        return false;
+      }
 
+      const deleted = posts[index];
       posts.splice(index, 1);
+      console.log(`   → Deleted "${deleted.title}" (Total: ${posts.length})`);
       return true;
     },
   },
@@ -106,10 +170,14 @@ const server = new ApolloServer({
     origin: "*",
     credentials: true,
   },
+  plugins: [debugMiddleware],
 });
 
 // 서버 시작
 server.listen({ port: 4000 }).then(({ url }) => {
+  console.log("\n" + "🚀".repeat(30));
   console.log(`🚀 GraphQL Server ready at ${url}`);
-  console.log(`📝 Try querying at ${url}`);
+  console.log(`📝 GraphQL Playground available at ${url}`);
+  console.log(`🔍 Debug mode: ENABLED`);
+  console.log("🚀".repeat(30) + "\n");
 });
