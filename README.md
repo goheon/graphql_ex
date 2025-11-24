@@ -1,17 +1,17 @@
 <div align="center">
 
-# 🚀 GraphQL Practice Project
+# 🚀 GraphQL 학습 프로젝트
 
-### Next.js + TypeScript + Apollo Client 실습 프로젝트
+### Next.js App Router + TypeScript + Apollo Client
+
+**Server-Side Rendering (SSR)과 Client-Side Rendering (CSR)의 차이를 학습하는 GraphQL 게시판 애플리케이션**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![GraphQL](https://img.shields.io/badge/GraphQL-E10098?style=for-the-badge&logo=graphql&logoColor=white)](https://graphql.org/)
 [![Apollo](https://img.shields.io/badge/Apollo-311C87?style=for-the-badge&logo=apollo-graphql)](https://www.apollographql.com/)
 
-**SSR/CSR 데이터 페칭, CRUD 연산, 파일 업로드**를 구현한 GraphQL 게시판 애플리케이션
-
-[📖 시작하기](#-시작하기) • [✨ 주요 기능](#-주요-기능) • [🏗️ 프로젝트 구조](#️-프로젝트-구조) • [📚 학습 가이드](#-학습-가이드)
+[📖 시작하기](#-시작하기) • [✨ 주요 기능](#-주요-기능) • [🏗️ 구조](#️-프로젝트-구조) • [📚 학습 포인트](#-학습-포인트)
 
 </div>
 
@@ -26,68 +26,68 @@
 - [프로젝트 구조](#️-프로젝트-구조)
 - [GraphQL API](#-graphql-api)
 - [학습 포인트](#-학습-포인트)
+- [라이선스](#-라이선스)
 
 ---
 
 ## 🎯 개요
 
-이 프로젝트는 **GraphQL**을 활용한 실무 중심의 실습 프로젝트입니다. Next.js App Router의 **Server Component**와 **Client Component**를 모두 활용하여 SSR과 CSR의 차이를 이해하고, Apollo Client를 통해 GraphQL CRUD 작업을 구현합니다.
+이 프로젝트는 **GraphQL**을 처음 배우는 개발자를 위한 실습 프로젝트입니다.
+
+Next.js의 **Server Component**와 **Client Component**를 활용하여:
+- **SSR (Server-Side Rendering)**: 서버에서 미리 데이터를 불러온 후 렌더링
+- **CSR (Client-Side Rendering)**: 클라이언트에서 동적으로 데이터를 로드
+
+이 두 가지 방식의 차이를 실제로 경험하면서 GraphQL을 학습할 수 있습니다.
 
 ### 🎓 학습 목표
 
-- ✅ GraphQL Query & Mutation 작성법 익히기
-- ✅ Apollo Client로 SSR/CSR 데이터 페칭 구현
+- ✅ GraphQL Query & Mutation의 기본 개념 이해
+- ✅ Apollo Client를 통한 SSR/CSR 데이터 페칭
 - ✅ React Suspense를 활용한 로딩 상태 관리
-- ✅ GraphQL 파일 업로드 (multipart/form-data)
-- ✅ TypeScript로 타입 안전한 GraphQL 개발
+- ✅ GraphQL CRUD (Create, Read, Update, Delete) 구현
+- ✅ TypeScript를 활용한 타입 안전한 GraphQL 개발
 
 ---
 
 ## 🛠️ 기술 스택
 
 ### Frontend
-
 - **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript 5.0
+- **Language**: TypeScript
 - **Styling**: SCSS Modules
+- **GraphQL Client**: Apollo Client 4.0.9
 - **State Management**: Apollo Client Cache
-- **GraphQL Client**: Apollo Client 4.0
 
-### Backend (Mock Server)
-
+### Backend (GraphQL Mock Server)
 - **Server**: Apollo Server 3.13
-- **Upload**: graphql-upload 13.0
-- **Storage**: In-Memory (Map)
+- **Runtime**: Node.js
+- **Storage**: In-Memory (배열과 Map)
 
 ---
 
 ## ✨ 주요 기능
 
-### 📝 게시판 CRUD
+### 📝 게시판 (CRUD)
 
-| 기능            | 렌더링 방식            | 설명                                      |
-| --------------- | ---------------------- | ----------------------------------------- |
-| **게시글 목록** | SSR (Server Component) | 서버에서 데이터를 미리 불러와 초기 렌더링 |
-| **게시글 상세** | CSR (Client Component) | 클라이언트에서 동적으로 데이터 로드       |
-| **게시글 작성** | CSR                    | 이미지 업로드 포함                        |
-| **게시글 수정** | CSR                    | 기존 이미지 유지/교체 가능                |
-| **게시글 삭제** | CSR                    | 연관된 이미지도 자동 삭제                 |
+| 기능 | 렌더링 방식 | 설명 |
+|------|-------------|------|
+| **게시글 목록 조회** | SSR | Server Component에서 서버 데이터를 미리 로드 |
+| **게시글 상세 조회** | CSR | Client Component에서 클라이언트 데이터 로드 |
+| **게시글 작성** | CSR | Apollo Mutation으로 새 게시글 생성 |
+| **게시글 수정** | CSR | 기존 게시글 정보 수정 |
+| **게시글 삭제** | CSR | 게시글 삭제 및 캐시 자동 갱신 |
 
-### 🖼️ 이미지 업로드
+### 🔄 렌더링 패턴
 
-- GraphQL `Upload` 스칼라 타입 사용
-- Multipart/form-data 방식
-- 메모리 내 Base64 인코딩 저장
-- 이미지 미리보기 지원
-
-### 🔍 실시간 디버깅
-
-서버 콘솔에서 모든 GraphQL 작업 추적:
-
-- 📥 Query 실행 로그
-- ✏️ Mutation 실행 로그
-- 🖥️ Server Component vs 🌐 Client 구분
-- ⏱️ 타임스탬프 및 성능 추적
+```
+SSR (Server Component)        CSR (Client Component)
+┌─────────────────────────┐  ┌─────────────────────────┐
+│  홈 페이지               │  │  게시글 상세            │
+│  - 게시글 목록           │  │  - 동적 로드            │
+│  - 서버에서 미리 로드    │  │  - 상호작용 요소        │
+└─────────────────────────┘  └─────────────────────────┘
+```
 
 ---
 
@@ -103,7 +103,7 @@ npm install
 ### 2️⃣ 개발 서버 실행
 
 ```bash
-# GraphQL 서버 + Next.js 개발 서버 동시 실행
+# GraphQL 서버와 Next.js 개발 서버를 동시에 실행
 npm run dev:all
 
 # 또는 개별 실행
@@ -111,7 +111,7 @@ npm run server  # GraphQL 서버 (포트 4000)
 npm run dev     # Next.js 서버 (포트 3000)
 ```
 
-### 3️⃣ 접속
+### 3️⃣ 브라우저 접속
 
 - **Next.js 앱**: http://localhost:3000
 - **GraphQL Playground**: http://localhost:4000
@@ -129,36 +129,37 @@ npm start
 
 ```
 grapQL_FE/
-├── 📁 app/                        # Next.js App Router
-│   ├── layout.tsx                 # 루트 레이아웃 (Apollo Provider)
-│   ├── page.tsx                   # 홈 (게시글 목록 - SSR)
+├── 📁 app/                          # Next.js App Router
+│   ├── layout.tsx                   # 루트 레이아웃 (Apollo Provider)
+│   ├── page.tsx                     # 홈 페이지 (게시글 목록 - SSR)
 │   ├── page.module.scss
-│   ├── globals.scss
-│   └── posts/
+│   ├── globals.scss                 # 전역 스타일
+│   │
+│   └── posts/                       # 게시글 관련 페이지
 │       ├── [id]/
-│       │   ├── page.tsx           # 게시글 상세 페이지
+│       │   ├── page.tsx             # 게시글 상세 (동적 라우트 - CSR)
 │       │   └── edit/
-│       │       └── page.tsx       # 게시글 수정 페이지
+│       │       └── page.tsx         # 게시글 수정 페이지
 │       └── create/
-│           └── page.tsx           # 게시글 작성 페이지
+│           └── page.tsx             # 게시글 작성 페이지
 │
-├── 📁 components/                 # React 컴포넌트
-│   ├── PostDetailClient.tsx       # 게시글 상세 (CSR)
-│   ├── CreatePostForm.tsx         # 작성 폼
-│   ├── EditPostForm.tsx           # 수정 폼
-│   └── *.module.scss
+├── 📁 components/                   # React 컴포넌트
+│   ├── PostDetailClient.tsx         # 게시글 상세 (Client Component)
+│   ├── CreatePostForm.tsx           # 게시글 작성 폼
+│   ├── EditPostForm.tsx             # 게시글 수정 폼
+│   └── *.module.scss                # 컴포넌트 스타일
 │
-├── 📁 lib/                        # 라이브러리 설정
-│   ├── apollo-client.ts           # SSR Apollo Client
-│   └── apollo-wrapper.tsx         # CSR Apollo Provider
+├── 📁 lib/                          # 라이브러리 설정
+│   ├── apollo-client.ts             # Server Component용 Apollo Client
+│   └── apollo-wrapper.tsx           # Client Component용 Apollo Provider
 │
-├── 📁 graphql/                    # GraphQL 정의
-│   └── queries.ts                 # Queries & Mutations
+├── 📁 graphql/                      # GraphQL 정의
+│   └── queries.ts                   # GraphQL Queries & Mutations
 │
-├── 📁 types/                      # TypeScript 타입
-│   └── post.ts                    # Post 관련 인터페이스
+├── 📁 types/                        # TypeScript 타입 정의
+│   └── post.ts                      # Post 관련 인터페이스
 │
-├── 📄 server.js                   # GraphQL Mock 서버
+├── 📄 server.js                     # GraphQL Mock 서버
 └── 📄 package.json
 ```
 
@@ -166,25 +167,22 @@ grapQL_FE/
 
 ## 📡 GraphQL API
 
-### Queries
+### 📥 Query (데이터 조회)
 
+#### GetPosts - 게시글 목록 조회
 ```graphql
-# 게시글 목록 조회
 query GetPosts {
   posts {
     id
     title
     author
     createdAt
-    image {
-      id
-      filename
-      data
-    }
   }
 }
+```
 
-# 게시글 상세 조회
+#### GetPost - 특정 게시글 조회
+```graphql
 query GetPost($id: ID!) {
   post(id: $id) {
     id
@@ -193,51 +191,55 @@ query GetPost($id: ID!) {
     author
     createdAt
     updatedAt
-    image {
-      id
-      filename
-      mimetype
-      data
-    }
   }
 }
 ```
 
-### Mutations
+### ✏️ Mutation (데이터 조작)
 
+#### CreatePost - 게시글 작성
 ```graphql
-# 게시글 작성
 mutation CreatePost(
   $title: String!
   $content: String!
   $author: String!
-  $image: Upload
 ) {
-  createPost(title: $title, content: $content, author: $author, image: $image) {
+  createPost(
+    title: $title
+    content: $content
+    author: $author
+  ) {
     id
     title
-    image {
-      id
-      filename
-    }
+    content
+    author
+    createdAt
   }
 }
+```
 
-# 게시글 수정
+#### UpdatePost - 게시글 수정
+```graphql
 mutation UpdatePost(
   $id: ID!
   $title: String
   $content: String
-  $image: Upload
 ) {
-  updatePost(id: $id, title: $title, content: $content, image: $image) {
+  updatePost(
+    id: $id
+    title: $title
+    content: $content
+  ) {
     id
     title
+    content
     updatedAt
   }
 }
+```
 
-# 게시글 삭제
+#### DeletePost - 게시글 삭제
+```graphql
 mutation DeletePost($id: ID!) {
   deletePost(id: $id)
 }
@@ -245,89 +247,135 @@ mutation DeletePost($id: ID!) {
 
 ---
 
-## 🎓 학습 포인트
+## 📚 학습 포인트
 
-### 1. Server Component vs Client Component
+### 1️⃣ Server Component vs Client Component
 
 ```tsx
 // ✅ Server Component (SSR)
+// 서버에서 렌더링되어 초기 HTML에 포함됨
 async function PostList() {
   const client = getClient(); // RSC용 Apollo Client
-  const { data } = await client.query({ query: GET_POSTS });
-  // ...
+  const { data } = await client.query({
+    query: GET_POSTS,
+  });
+  return <ul>...</ul>;
 }
 
 // ✅ Client Component (CSR)
-("use client");
+// 클라이언트에서 렌더링되고 상호작용 가능
+"use client";
 function PostDetailClient() {
-  const { data } = useQuery(GET_POST, { variables: { id } });
-  // ...
+  const { data, loading } = useQuery(GET_POST, {
+    variables: { id },
+  });
+  return <article>...</article>;
 }
 ```
 
-### 2. React Suspense 활용
+**📌 언제 어떤 걸 사용할까?**
+- **Server Component**: 초기 로딩 속도가 중요할 때, 서버만 접근 가능한 리소스가 필요할 때
+- **Client Component**: 사용자 상호작용이 필요할 때, 실시간 업데이트가 필요할 때
+
+### 2️⃣ React Suspense 활용
 
 ```tsx
+// 로딩 중에 폴백 UI 표시
 <Suspense fallback={<PostListSkeleton />}>
   <PostList />
 </Suspense>
 ```
 
-### 3. Apollo Client Cache 관리
+### 3️⃣ Apollo Client 캐시 관리
 
 ```tsx
-// Mutation 후 자동으로 Query 재실행
-useMutation(CREATE_POST, {
-  refetchQueries: [{ query: GET_POSTS }],
+// Mutation 성공 후 자동으로 Query 재실행
+const [createPost] = useMutation(CREATE_POST, {
+  refetchQueries: [{ query: GET_POSTS }], // 캐시 자동 갱신
 });
 ```
 
-### 4. GraphQL File Upload
+### 4️⃣ TypeScript 타입 안전성
 
 ```tsx
-// 파일을 변수로 전달
-await createPost({
-  variables: {
-    title,
-    content,
-    author,
-    image: file, // File 객체
-  },
-});
-```
-
-### 5. TypeScript 타입 안전성
-
-```tsx
+// 강타입으로 GraphQL 변수와 응답 정의
 interface CreatePostVars {
   title: string;
   content: string;
   author: string;
-  image?: File | null;
 }
 
+interface CreatePostData {
+  createPost: Post;
+}
+
+// useMutation에 제네릭 타입 전달
 useMutation<CreatePostData, CreatePostVars>(CREATE_POST);
+```
+
+### 5️⃣ GraphQL 변수 활용
+
+```tsx
+// 동적 변수를 안전하게 전달
+const { data } = useQuery(GET_POST, {
+  variables: { id: "1" }, // 변수 값 주입
+});
 ```
 
 ---
 
-## 📚 추가 학습 자료
+## 🔍 서버 디버깅
 
-- [Next.js App Router 공식 문서](https://nextjs.org/docs/app)
+GraphQL 서버는 모든 요청을 실시간으로 로깅합니다:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[오후 2:07:29] 🖥️  [Server Component] GetPosts
+📥 Query.posts
+   → 4 posts
+✅ Success
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+- 🖥️ **Server Component**: Next.js 서버에서 실행된 요청
+- 🌐 **Client**: 브라우저에서 실행된 요청
+
+---
+
+## 📖 추가 학습 자료
+
+### 공식 문서
+- [Next.js App Router](https://nextjs.org/docs/app)
 - [Apollo Client 공식 문서](https://www.apollographql.com/docs/react/)
-- [GraphQL 공식 문서](https://graphql.org/learn/)
-- [TypeScript 공식 문서](https://www.typescriptlang.org/docs/)
+- [GraphQL 공식 가이드](https://graphql.org/learn/)
+- [TypeScript 핸드북](https://www.typescriptlang.org/docs/)
+
+### 추천 학습 순서
+1. GraphQL 기본 개념 이해
+2. 이 프로젝트의 `server.js` 스키마 분석
+3. `graphql/queries.ts`에서 Query와 Mutation 작성 방식 학습
+4. `lib/apollo-client.ts`와 `lib/apollo-wrapper.tsx` 비교
+5. 각 페이지 컴포넌트에서 SSR/CSR 차이 확인
+6. 게시글 작성/수정/삭제 기능 직접 구현해보기
 
 ---
 
 ## 📝 라이선스
 
-MIT License
+[ISC](LICENSE)
+
+---
+
+## 🤝 기여
+
+이 프로젝트는 학습 목적으로 만들어졌습니다. 피드백과 개선 제안은 언제든 환영합니다!
 
 ---
 
 <div align="center">
 
 **Made with ❤️ for GraphQL Learning**
+
+⭐ 이 프로젝트가 도움이 되었다면 Star를 눌러주세요!
 
 </div>
