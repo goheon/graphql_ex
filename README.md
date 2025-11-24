@@ -46,6 +46,7 @@
 ## 🛠️ 기술 스택
 
 ### Frontend
+
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript 5.0
 - **Styling**: SCSS Modules
@@ -53,6 +54,7 @@
 - **GraphQL Client**: Apollo Client 4.0
 
 ### Backend (Mock Server)
+
 - **Server**: Apollo Server 3.13
 - **Upload**: graphql-upload 13.0
 - **Storage**: In-Memory (Map)
@@ -63,13 +65,13 @@
 
 ### 📝 게시판 CRUD
 
-| 기능 | 렌더링 방식 | 설명 |
-|------|-------------|------|
+| 기능            | 렌더링 방식            | 설명                                      |
+| --------------- | ---------------------- | ----------------------------------------- |
 | **게시글 목록** | SSR (Server Component) | 서버에서 데이터를 미리 불러와 초기 렌더링 |
-| **게시글 상세** | CSR (Client Component) | 클라이언트에서 동적으로 데이터 로드 |
-| **게시글 작성** | CSR | 이미지 업로드 포함 |
-| **게시글 수정** | CSR | 기존 이미지 유지/교체 가능 |
-| **게시글 삭제** | CSR | 연관된 이미지도 자동 삭제 |
+| **게시글 상세** | CSR (Client Component) | 클라이언트에서 동적으로 데이터 로드       |
+| **게시글 작성** | CSR                    | 이미지 업로드 포함                        |
+| **게시글 수정** | CSR                    | 기존 이미지 유지/교체 가능                |
+| **게시글 삭제** | CSR                    | 연관된 이미지도 자동 삭제                 |
 
 ### 🖼️ 이미지 업로드
 
@@ -81,6 +83,7 @@
 ### 🔍 실시간 디버깅
 
 서버 콘솔에서 모든 GraphQL 작업 추적:
+
 - 📥 Query 실행 로그
 - ✏️ Mutation 실행 로그
 - 🖥️ Server Component vs 🌐 Client 구분
@@ -210,12 +213,7 @@ mutation CreatePost(
   $author: String!
   $image: Upload
 ) {
-  createPost(
-    title: $title
-    content: $content
-    author: $author
-    image: $image
-  ) {
+  createPost(title: $title, content: $content, author: $author, image: $image) {
     id
     title
     image {
@@ -232,12 +230,7 @@ mutation UpdatePost(
   $content: String
   $image: Upload
 ) {
-  updatePost(
-    id: $id
-    title: $title
-    content: $content
-    image: $image
-  ) {
+  updatePost(id: $id, title: $title, content: $content, image: $image) {
     id
     title
     updatedAt
@@ -265,7 +258,7 @@ async function PostList() {
 }
 
 // ✅ Client Component (CSR)
-"use client";
+("use client");
 function PostDetailClient() {
   const { data } = useQuery(GET_POST, { variables: { id } });
   // ...
@@ -285,7 +278,7 @@ function PostDetailClient() {
 ```tsx
 // Mutation 후 자동으로 Query 재실행
 useMutation(CREATE_POST, {
-  refetchQueries: [{ query: GET_POSTS }]
+  refetchQueries: [{ query: GET_POSTS }],
 });
 ```
 
@@ -298,8 +291,8 @@ await createPost({
     title,
     content,
     author,
-    image: file // File 객체
-  }
+    image: file, // File 객체
+  },
 });
 ```
 
@@ -337,17 +330,4 @@ MIT License
 
 **Made with ❤️ for GraphQL Learning**
 
-⭐ 이 프로젝트가 도움이 되었다면 Star를 눌러주세요!
-
 </div>
-
-## 다음 단계
-
-1. Apollo Client 설정
-2. GraphQL 쿼리 작성
-3. 컴포넌트에서 데이터 페칭
-4. 뮤테이션 구현
-
-## 라이선스
-
-ISC
